@@ -14,11 +14,11 @@ Programa desenvolvido com C# em linha de comando como projeto final da matéria 
 - int countCashRegister;
 
 ### Structs:
-- Stock: { string batch;
+- Product: { string batch;
         string description;
         DateTime validity;
         float price };
-- Product: { Product product;
+- Stock: { Product product;
         int stockAmount;
         int stockSaled;
         int stockInitial; }

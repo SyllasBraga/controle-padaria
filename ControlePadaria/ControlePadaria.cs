@@ -31,7 +31,7 @@
     }
 
     [Serializable]
-    struct cashRegister
+    struct CashRegister
     {
         Sale[] sales;
         float totalValue;
