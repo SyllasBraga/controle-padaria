@@ -1,5 +1,6 @@
 ﻿using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
+using System;
 
 class ControlePadaria
 {
@@ -16,6 +17,7 @@ class ControlePadaria
     static void Main(string[] args)
     {
         setup();
+        saveProducts();
         showProducts();
     }
 
@@ -75,6 +77,20 @@ class ControlePadaria
             rd.Close();
         }
     }
+
+    static Product[] sortProducts()
+    {
+        Product[] sortProdutcs = new Product[countProduct];
+        for(int i=0; i<countProduct; i++)
+        {
+            sortProdutcs[i] = products[i];
+        }
+        int maxComparisons = countProduct;
+        Array.Sort(sortProdutcs, (p1, p2) => p1.description.CompareTo(p2.description));
+
+        return sortProdutcs;
+    }
+
     static void saveCountProductsBinFile(ref int total)
     {
         IFormatter formatter = new BinaryFormatter();
@@ -93,15 +109,21 @@ class ControlePadaria
     }
     static void showProducts()
     {
+        Product[] productsForShow = sortProducts();
         Array.Clear(products, 0, products.Length);
         readBinProducts();
         Console.WriteLine("--- PRODUTOS CADASTRADOS NO SISTEMA ---\n");
-        for (int i = 0; i<countProduct; i++)
+        for (int i = 0; i< productsForShow.Length; i++)
         {
-            Console.WriteLine(products[i].ToString());
+            Console.WriteLine(productsForShow[i].ToString());
         }
         Console.WriteLine("\n Tecle 'enter' para continuar.\n");
         Console.ReadLine();
+    }
+    static void setup()
+    {
+        readBinProducts();
+        readBinAmountProducts();
     }
 
     [Serializable]
@@ -112,12 +134,6 @@ class ControlePadaria
         public float price;
         public override string ToString() =>
             $"Lote: {batch} - Descrição: {description} - Validade: {validity} - Preço: R${price}";
-    }
-
-    static void setup()
-    {
-        readBinAmountProducts();
-        readBinProducts();
     }
 
     [Serializable]
