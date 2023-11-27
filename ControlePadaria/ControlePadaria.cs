@@ -15,10 +15,16 @@ class ControlePadaria
     static int countSales = 0;
     static int countCashRegister = 0;
 
+    static string nameFileStock = "Stock";
+    static string nameFileProduct = "Product";
+    static string nameFileSales = "Sales";
+    static string nameFileCashRegister = "CashResgister";
+
     static void Main(string[] args)
     {
         setup();
         saveStock();
+        showStock();
     }
 
     static void saveStock()
@@ -27,11 +33,17 @@ class ControlePadaria
         Console.WriteLine("--- CADASTRO DE ESTOQUE --- \n");
         showProducts();
         Console.Write("Digite o ID do produto que você deseja cadastrar estoque: ");
-        int productId = int.Parse(Console.ReadLine());
-        Product product = binarySearchProductById(sortedProducts, productId);
-        Console.WriteLine("Digite a quantidade total de produtos em estoque: ");
-        int stockInitial = int.Parse(Console.ReadLine());
+        int oldCountStock = countStock;
+        countStock += 1;
+        for (int i=oldCountStock; i<countStock; i++)
+        {
+            int productId = int.Parse(Console.ReadLine());
+            productsStock[oldCountStock].product = binarySearchProductById(sortedProducts, productId);
+            Console.WriteLine("Digite a quantidade total de produtos em estoque: ");
+            productsStock[oldCountStock].stockInitial = int.Parse(Console.ReadLine());
+        }
 
+        saveBinFile(productsStock, countStock, nameFileStock);
     }
 
     static Product binarySearchProductById(Product[] productsSorted, int productId)
@@ -84,27 +96,27 @@ class ControlePadaria
             products[i].price = float.Parse(Console.ReadLine());
             Console.Clear();
         }
-        saveProductsBinFile(products, countProduct);
+        saveBinFile(products, countProduct, nameFileProduct);
     }
 
-    static void saveProductsBinFile(Product[] productsArray, int total)
+    static void saveBinFile<T>(T[] array, int total, string nameFile)
     {
         IFormatter formatter = new BinaryFormatter();
-        Stream wr = new FileStream("products.bin", FileMode.Create, FileAccess.Write);
+        Stream wr = new FileStream($"array{nameFile}.bin", FileMode.Create, FileAccess.Write);
         int i;
         for (i = 0; i < total; i++)
         {
-            formatter.Serialize(wr, productsArray[i]); 
+            formatter.Serialize(wr, array[i]); 
         }
-        saveCountProductsBinFile(ref i);
         wr.Close();
+        saveCountBinFile(ref i, nameFile);
     }
-    static void readBinProducts()
+    static void readBin(string nameFile)
     {
         IFormatter formatter = new BinaryFormatter();
-        if (File.Exists("products.bin"))
+        if (File.Exists($"array{nameFile}.bin"))
         {
-            Stream rd = new FileStream("products.bin", FileMode.Open, FileAccess.Read);
+            Stream rd = new FileStream($"array{nameFile}.bin", FileMode.Open, FileAccess.Read);
             int i = 0;
             while (rd.Position < rd.Length)
             {
@@ -127,27 +139,28 @@ class ControlePadaria
         return sortProdutcs;
     }
 
-    static void saveCountProductsBinFile(ref int total)
+    static void saveCountBinFile(ref int total, string nameFile)
     {
         IFormatter formatter = new BinaryFormatter();
-        Stream wr = new FileStream("countProducts.bin", FileMode.Create, FileAccess.Write);
+        Stream wr = new FileStream($"count{nameFile}.bin", FileMode.Create, FileAccess.Write);
         formatter.Serialize(wr, total);
     }
-    static void readBinAmountProducts()
+    static void readBinCount(string nameFile)
     {
         IFormatter formatter = new BinaryFormatter();
-        if (File.Exists("countProducts.bin"))
+        if (File.Exists($"count{nameFile}.bin"))
         {
-            Stream rd = new FileStream("countProducts.bin", FileMode.Open, FileAccess.Read);
+            Stream rd = new FileStream($"count{nameFile}.bin", FileMode.Open, FileAccess.Read);
             countProduct = (int)formatter.Deserialize(rd);
             rd.Close();
         }
     }
+
     static void showProducts()
     {
         Product[] productsForShow = sortProducts();
         Array.Clear(products, 0, products.Length);
-        readBinProducts();
+        readBin(nameFileProduct);
         Console.WriteLine("--- PRODUTOS CADASTRADOS NO SISTEMA ---\n");
         for (int i = 0; i< productsForShow.Length; i++)
         {
@@ -156,10 +169,22 @@ class ControlePadaria
         Console.WriteLine("\n Tecle 'enter' para continuar.\n");
         Console.ReadLine();
     }
+    static void showStock()
+    {
+        readBin(nameFileStock);
+        Console.WriteLine("--- ESTOQUE CADASTRADO NO SISTEMA ---\n");
+        for (int i = 0; i < countStock; i++)
+        {
+            Console.WriteLine(productsStock[i].ToString());
+        }
+        Console.WriteLine("\n Tecle 'enter' para continuar.\n");
+        Console.ReadLine();
+    }
     static void setup()
     {
-        readBinProducts();
-        readBinAmountProducts();
+        readBinCount(nameFileStock);
+        readBinCount(nameFileProduct);
+        readBin(nameFileProduct);
     }
 
     [Serializable]
