@@ -26,10 +26,12 @@ class ControlePadaria
         Product[] sortedProducts = sortProducts();
         Console.WriteLine("--- CADASTRO DE ESTOQUE --- \n");
         showProducts();
-        Console.Write("Digite o ID do produto que você deseja cadastrar: ");
+        Console.Write("Digite o ID do produto que você deseja cadastrar estoque: ");
         int productId = int.Parse(Console.ReadLine());
         Product product = binarySearchProductById(sortedProducts, productId);
-        Console.ReadLine();
+        Console.WriteLine("Digite a quantidade total de produtos em estoque: ");
+        int stockInitial = int.Parse(Console.ReadLine());
+
     }
 
     static Product binarySearchProductById(Product[] productsSorted, int productId)
@@ -53,7 +55,6 @@ class ControlePadaria
                 left = middle + 1;
             }
         }
-        Console.WriteLine("Opa");
         return product;
     }
 
