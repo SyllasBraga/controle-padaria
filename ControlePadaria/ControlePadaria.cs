@@ -23,6 +23,7 @@ class ControlePadaria
     static void Main(string[] args)
     {
         setup();
+        showProducts();
         saveStock();
         showStock();
     }
@@ -30,7 +31,7 @@ class ControlePadaria
     {
         Product[] productsForShow = sortProducts();
         Array.Clear(products, 0, products.Length);
-        readBin(nameFileProduct);
+        readBinProduct();
         Console.WriteLine("--- PRODUTOS CADASTRADOS NO SISTEMA ---\n");
         for (int i = 0; i < productsForShow.Length; i++)
         {
@@ -42,7 +43,7 @@ class ControlePadaria
 
     static void showStock()
     {
-        readBin(nameFileStock);
+        readBinStock();
         Console.WriteLine("--- ESTOQUE CADASTRADO NO SISTEMA ---\n");
         for (int i = 0; i < countStock; i++)
         {
@@ -64,7 +65,9 @@ class ControlePadaria
             int productId = int.Parse(Console.ReadLine());
             productsStock[oldCountStock].product = binarySearchProductById(sortedProducts, productId);
             Console.WriteLine("Digite a quantidade total de produtos em estoque: ");
-            productsStock[oldCountStock].stockInitial = int.Parse(Console.ReadLine());
+            int stock = int.Parse(Console.ReadLine());
+            productsStock[oldCountStock].stockInitial = stock;
+            productsStock[oldCountStock].stockAmount = stock;
         }
 
         saveBinFile(productsStock, countStock, nameFileStock);
@@ -153,12 +156,12 @@ class ControlePadaria
         wr.Close();
         saveCountBinFile(ref i, nameFile);
     }
-    static void readBin(string nameFile)
+    static void readBinProduct()
     {
         IFormatter formatter = new BinaryFormatter();
-        if (File.Exists($"array{nameFile}.bin"))
+        if (File.Exists($"array{nameFileProduct}.bin"))
         {
-            Stream rd = new FileStream($"array{nameFile}.bin", FileMode.Open, FileAccess.Read);
+            Stream rd = new FileStream($"array{nameFileProduct}.bin", FileMode.Open, FileAccess.Read);
             int i = 0;
             while (rd.Position < rd.Length)
             {
@@ -170,22 +173,42 @@ class ControlePadaria
         }
     }
 
-    static void readBinCount(string nameFile)
+    static void readBinStock()
+    {
+        IFormatter formatter = new BinaryFormatter();
+        if (File.Exists($"array{nameFileStock}.bin"))
+        {
+            Stream rd = new FileStream($"array{nameFileStock}.bin", FileMode.Open, FileAccess.Read);
+            int i = 0;
+            while (rd.Position < rd.Length)
+            {
+                Stock stock = (Stock)formatter.Deserialize(rd);
+                productsStock[i] = stock;
+                i++;
+            }
+            rd.Close();
+        }
+    }
+
+    static int readBinCount(string nameFile)
     {
         IFormatter formatter = new BinaryFormatter();
         if (File.Exists($"count{nameFile}.bin"))
         {
             Stream rd = new FileStream($"count{nameFile}.bin", FileMode.Open, FileAccess.Read);
-            countProduct = (int)formatter.Deserialize(rd);
+            int count = (int)formatter.Deserialize(rd);
             rd.Close();
+            return count;
         }
+        return 0;
     }
 
     static void setup()
     {
-        readBinCount(nameFileStock);
-        readBinCount(nameFileProduct);
-        readBin(nameFileProduct);
+        countProduct = readBinCount(nameFileProduct);
+        countStock = readBinCount(nameFileStock);
+        readBinProduct();
+        readBinStock();
     }
 
     [Serializable]
@@ -206,6 +229,8 @@ class ControlePadaria
         public int stockAmount;
         public int stockSaled;
         public int stockInitial;
+        public override string ToString() =>
+            $"Produto: {product.description} - Estoque atual: {stockAmount} - Estoque vendido: {stockSaled} - Estoque inicial: {stockInitial}";
     }
 
     [Serializable]
