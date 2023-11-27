@@ -26,7 +26,31 @@ class ControlePadaria
         saveStock();
         showStock();
     }
+    static void showProducts()
+    {
+        Product[] productsForShow = sortProducts();
+        Array.Clear(products, 0, products.Length);
+        readBin(nameFileProduct);
+        Console.WriteLine("--- PRODUTOS CADASTRADOS NO SISTEMA ---\n");
+        for (int i = 0; i < productsForShow.Length; i++)
+        {
+            Console.WriteLine(productsForShow[i].ToString());
+        }
+        Console.WriteLine("\n Tecle 'enter' para continuar.\n");
+        Console.ReadLine();
+    }
 
+    static void showStock()
+    {
+        readBin(nameFileStock);
+        Console.WriteLine("--- ESTOQUE CADASTRADO NO SISTEMA ---\n");
+        for (int i = 0; i < countStock; i++)
+        {
+            Console.WriteLine(productsStock[i].ToString());
+        }
+        Console.WriteLine("\n Tecle 'enter' para continuar.\n");
+        Console.ReadLine();
+    }
     static void saveStock()
     {
         Product[] sortedProducts = sortProducts();
@@ -44,6 +68,35 @@ class ControlePadaria
         }
 
         saveBinFile(productsStock, countStock, nameFileStock);
+    }
+
+    static void saveProducts()
+    {
+        Console.WriteLine("Quantos produtos deseja cadastrar? " + "\n Limite de " + (products.Length - countProduct));
+        int amountProducts = int.Parse(Console.ReadLine());
+        int oldCountProduct = countProduct;
+        countProduct += amountProducts;
+        Console.Clear();
+        for (int i = oldCountProduct; i < countProduct; i++)
+        {
+            products[i].id = i + 1;
+            Console.WriteLine("Qual é o lote do produto?");
+            products[i].batch = Console.ReadLine();
+            Console.WriteLine("Insira uma descrição para o produto: ");
+            products[i].description = Console.ReadLine();
+            Console.WriteLine("Qual é a data de validade do produto?\nDigite no formato AA/MM/YYY.");
+            Console.Write("Dia: ");
+            int day = int.Parse(Console.ReadLine());
+            Console.Write("Mês: ");
+            int month = int.Parse(Console.ReadLine());
+            Console.Write("Ano: ");
+            int year = int.Parse(Console.ReadLine());
+            products[i].validity = new DateTime(year, month, day);
+            Console.WriteLine("Digite o preço do produto (R$): ");
+            products[i].price = float.Parse(Console.ReadLine());
+            Console.Clear();
+        }
+        saveBinFile(products, countProduct, nameFileProduct);
     }
 
     static Product binarySearchProductById(Product[] productsSorted, int productId)
@@ -70,33 +123,22 @@ class ControlePadaria
         return product;
     }
 
-    static void saveProducts()
+    static Product[] sortProducts()
     {
-        Console.WriteLine("Quantos produtos deseja cadastrar? " + "\n Limite de " + (products.Length - countProduct));
-        int amountProducts = int.Parse(Console.ReadLine());
-        int oldCountProduct = countProduct;
-        countProduct += amountProducts;
-        Console.Clear();
-        for (int i = oldCountProduct; i < countProduct; i++)
+        Product[] sortProdutcs = new Product[countProduct];
+        for (int i = 0; i < countProduct; i++)
         {
-            products[i].id = i+1;
-            Console.WriteLine("Qual é o lote do produto?");
-            products[i].batch = Console.ReadLine();
-            Console.WriteLine("Insira uma descrição para o produto: ");
-            products[i].description = Console.ReadLine();
-            Console.WriteLine("Qual é a data de validade do produto? \nDigite no formato AA/MM/YYY.");
-            Console.Write("Dia: ");
-            int day = int.Parse(Console.ReadLine());
-            Console.Write("Mês: ");
-            int month = int.Parse(Console.ReadLine());
-            Console.Write("Ano: ");
-            int year = int.Parse(Console.ReadLine());
-            products[i].validity = new DateTime(year, month, day);
-            Console.WriteLine("Digite o preço do produto (R$): ");
-            products[i].price = float.Parse(Console.ReadLine());
-            Console.Clear();
+            sortProdutcs[i] = products[i];
         }
-        saveBinFile(products, countProduct, nameFileProduct);
+        Array.Sort(sortProdutcs, (p1, p2) => p1.description.CompareTo(p2.description));
+        return sortProdutcs;
+    }
+
+    static void saveCountBinFile(ref int total, string nameFile)
+    {
+        IFormatter formatter = new BinaryFormatter();
+        Stream wr = new FileStream($"count{nameFile}.bin", FileMode.Create, FileAccess.Write);
+        formatter.Serialize(wr, total);
     }
 
     static void saveBinFile<T>(T[] array, int total, string nameFile)
@@ -128,23 +170,6 @@ class ControlePadaria
         }
     }
 
-    static Product[] sortProducts()
-    {
-        Product[] sortProdutcs = new Product[countProduct];
-        for(int i=0; i<countProduct; i++)
-        {
-            sortProdutcs[i] = products[i];
-        }
-        Array.Sort(sortProdutcs, (p1, p2) => p1.description.CompareTo(p2.description));
-        return sortProdutcs;
-    }
-
-    static void saveCountBinFile(ref int total, string nameFile)
-    {
-        IFormatter formatter = new BinaryFormatter();
-        Stream wr = new FileStream($"count{nameFile}.bin", FileMode.Create, FileAccess.Write);
-        formatter.Serialize(wr, total);
-    }
     static void readBinCount(string nameFile)
     {
         IFormatter formatter = new BinaryFormatter();
@@ -156,30 +181,6 @@ class ControlePadaria
         }
     }
 
-    static void showProducts()
-    {
-        Product[] productsForShow = sortProducts();
-        Array.Clear(products, 0, products.Length);
-        readBin(nameFileProduct);
-        Console.WriteLine("--- PRODUTOS CADASTRADOS NO SISTEMA ---\n");
-        for (int i = 0; i< productsForShow.Length; i++)
-        {
-            Console.WriteLine(productsForShow[i].ToString());
-        }
-        Console.WriteLine("\n Tecle 'enter' para continuar.\n");
-        Console.ReadLine();
-    }
-    static void showStock()
-    {
-        readBin(nameFileStock);
-        Console.WriteLine("--- ESTOQUE CADASTRADO NO SISTEMA ---\n");
-        for (int i = 0; i < countStock; i++)
-        {
-            Console.WriteLine(productsStock[i].ToString());
-        }
-        Console.WriteLine("\n Tecle 'enter' para continuar.\n");
-        Console.ReadLine();
-    }
     static void setup()
     {
         readBinCount(nameFileStock);
