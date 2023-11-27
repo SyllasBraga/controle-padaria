@@ -1,6 +1,7 @@
 ﻿using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 class ControlePadaria
 {
@@ -17,8 +18,43 @@ class ControlePadaria
     static void Main(string[] args)
     {
         setup();
-        saveProducts();
+        saveStock();
+    }
+
+    static void saveStock()
+    {
+        Product[] sortedProducts = sortProducts();
+        Console.WriteLine("--- CADASTRO DE ESTOQUE --- \n");
         showProducts();
+        Console.Write("Digite o ID do produto que você deseja cadastrar: ");
+        int productId = int.Parse(Console.ReadLine());
+        Product product = binarySearchProductById(sortedProducts, productId);
+        Console.ReadLine();
+    }
+
+    static Product binarySearchProductById(Product[] productsSorted, int productId)
+    {
+        int left = 0;
+        int right = productsSorted.Length-1;
+        Product product = new Product();
+        while (left <= right)
+        {
+            int middle = (left + right) / 2;
+            if (productsSorted[middle].id == productId)
+            {
+                return productsSorted[middle];
+            }
+            else if (middle < productsSorted.Length)
+            {
+                right = middle - 1;
+            }
+            else
+            {
+                left = middle + 1;
+            }
+        }
+        Console.WriteLine("Opa");
+        return product;
     }
 
     static void saveProducts()
@@ -30,6 +66,7 @@ class ControlePadaria
         Console.Clear();
         for (int i = oldCountProduct; i < countProduct; i++)
         {
+            products[i].id = i+1;
             Console.WriteLine("Qual é o lote do produto?");
             products[i].batch = Console.ReadLine();
             Console.WriteLine("Insira uma descrição para o produto: ");
@@ -85,9 +122,7 @@ class ControlePadaria
         {
             sortProdutcs[i] = products[i];
         }
-        int maxComparisons = countProduct;
         Array.Sort(sortProdutcs, (p1, p2) => p1.description.CompareTo(p2.description));
-
         return sortProdutcs;
     }
 
@@ -132,8 +167,9 @@ class ControlePadaria
         public string description;
         public DateTime validity;
         public float price;
+        public int id;
         public override string ToString() =>
-            $"Lote: {batch} - Descrição: {description} - Validade: {validity} - Preço: R${price}";
+            $"ID: {id} - Lote: {batch} - Descrição: {description} - Validade: {validity} - Preço: R${price}";
     }
 
     [Serializable]
