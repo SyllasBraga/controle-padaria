@@ -7,25 +7,20 @@ class ControlePadaria
 {
     static Stock[] productsStock = new Stock[1000];
     static Product[] products = new Product[1000];
-    static Sale[] sales = new Sale[1000];
     static CashRegister[] cashRegister = new CashRegister[1000];
 
     static int countStock = 0;
     static int countProduct = 0;
-    static int countSales = 0;
     static int countCashRegister = 0;
 
     static string nameFileStock = "Stock";
     static string nameFileProduct = "Product";
-    static string nameFileSales = "Sales";
     static string nameFileCashRegister = "CashResgister";
 
     static void Main(string[] args)
     {
         setup();
-        showProducts();
-        saveStock();
-        showStock();
+        saveCashResgiter();
     }
     static void showProducts()
     {
@@ -100,6 +95,40 @@ class ControlePadaria
             Console.Clear();
         }
         saveBinFile(products, countProduct, nameFileProduct);
+    }
+
+    static void saveCashResgiter()
+    {
+        Console.WriteLine("--- Rgeistro de Caixa ---\n");
+        int oldCountCashRegister = countCashRegister;
+        countCashRegister += 1;
+        for(int i = oldCountCashRegister; i < countCashRegister; i++)
+        {
+            float totalValue = 0;
+            Product[] sortedProducts = sortProducts();
+            Console.Write("Digite o tipo de pagamento: ");
+            cashRegister[i].paymentType = Console.ReadLine();
+            cashRegister[i].date = new DateTime();
+            Console.WriteLine("Digite o número de produtos que foram vendidos: ");
+            int numberProducts = int.Parse(Console.ReadLine());
+     
+            Sale[] sales = new Sale[numberProducts];
+            for (int j=0; j<sales.Length; i++)
+            {
+                Console.Clear();
+                Console.Write(sales.Length + "\n");
+                showProducts();
+                Console.Write("Digite o ID do produto que você deseja cadastrar estoque: ");
+                int productId = int.Parse(Console.ReadLine());
+                sales[j].product = binarySearchProductById(sortedProducts, productId);
+                Console.WriteLine("Digite a quantidade que a ser vendida: ");
+                sales[j].quantity = int.Parse(Console.ReadLine());
+                totalValue += sales[j].product.price * sales[j].quantity;
+            }
+            cashRegister[i].totalValue = totalValue;
+            cashRegister[i].sales = sales;
+            saveTxtFile(nameFileCashRegister, cashRegister[i].ToString());
+        }
     }
 
     static Product binarySearchProductById(Product[] productsSorted, int productId)
@@ -203,6 +232,13 @@ class ControlePadaria
         return 0;
     }
 
+    static void saveTxtFile(string nameFile, string content)
+    {
+        StreamWriter wr = new StreamWriter($"{nameFile}.txt", true);
+        wr.WriteLine(content);
+        wr.Close();
+    }
+
     static void setup()
     {
         countProduct = readBinCount(nameFileProduct);
@@ -237,8 +273,9 @@ class ControlePadaria
     struct Sale 
     {
         public Product product;
-        public DateTime saleDate;
         public int quantity;
+        public override string ToString() =>
+            $"  - Produto: {product.description} - Quantidade: {quantity}";
     }
 
     [Serializable]
@@ -248,6 +285,14 @@ class ControlePadaria
         public float totalValue;
         public string paymentType;
         public DateTime date;
+        public override string ToString()
+        {
+            string saleString = "";
+            for(int i = 0; i < sales.Length; i++)
+            {
+                saleString+= sales[i].ToString();
+            }
+            return $"Data da venda: {date} - Tipo de pagamento: {paymentType} - Valor total: {totalValue} - Vendas: {saleString}";
+        }
     }
-
 }
