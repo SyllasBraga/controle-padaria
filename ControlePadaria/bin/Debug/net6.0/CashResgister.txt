@@ -1,87 +1,11 @@
-Data da venda: 01/01/0001 00:00:00 - Tipo de pagamento: PIX - Valor total: 0 - Vendas:   - Produto:  - Quantidade: 10  - Produto:  - Quantidade: 2
-Data da venda: 01/01/0001 00:00:00 - Tipo de pagamento: pix - Valor total: 0 - Vendas:   - Produto:  - Quantidade: 2
-Data da venda: 01/01/0001 00:00:00 - Tipo de pagamento: pix - Valor total: 0 - Vendas:   - Produto:  - Quantidade: 1
-Data da venda: 01/01/0001 00:00:00 - Tipo de pagamento: pix - Valor total: 0 - Vendas:   - Produto:  - Quantidade: 1
-Data da venda: 01/01/0001 00:00:00 - Tipo de pagamento: h - Valor total: 10 - Vendas:   - Produto: Arroz - Quantidade: 1
-Data da venda: 01/01/0001 00:00:00 - Tipo de pagamento: q - Valor total: 0 - Vendas:   - Produto:  - Quantidade: 1
-Data da venda: 01/01/0001 00:00:00 - Tipo de pagamento: pix - Valor total: 90 - Vendas:   - Produto: Arroz - Quantidade: 9
-Data da venda: 01/01/0001 00:00:00 - Tipo de pagamento: pix - Valor total: 10 - Vendas:   - Produto: Arroz - Quantidade: 1
-Data da venda: 01/01/0001 00:00:00 - Tipo de pagamento: pix - Valor total: R$0 - Vendas: 
-  - Produto:  - Quantidade: 1
-Data da venda: 01/01/0001 00:00:00 - Tipo de pagamento: PIX - Valor total: R$900 - Vendas: 
-  - Produto:  - Quantidade: 10
-  - Produto: Arroz - Quantidade: 90
-Data da venda: 28/11/2023 16:33:58 - Tipo de pagamento: PIX - Valor total: R$0 - Vendas: 
-  - Produto:  - Quantidade: 1
-Data da venda: 28/11/2023 16:34:48 - Tipo de pagamento: PIX - Valor total: R$100 
+
+ Data da venda: 28/11/2023 22:07:01 - Tipo de pagamento: Pix - Valor total: R$750 
 Lista de produtos: 
-  - Produto:  - Quantidade: 1
-  - Produto: Arroz - Quantidade: 10
-Data da venda: 28/11/2023 16:36:22 - Tipo de pagamento: PIX - Valor total: R$0 
+  - Produto: Café Arábico - Quantidade: 10
+  - Produto: Pão de queijo congelado - Quantidade: 3
+  - Produto: Pão de queijo congelado - Quantidade: 10
+
+ Data da venda: 28/11/2023 22:08:06 - Tipo de pagamento: DINHEIRO - Valor total: R$280 
 Lista de produtos: 
-  - Produto:  - Quantidade: 1
-Data da venda: 28/11/2023 18:10:53 - Tipo de pagamento: pix - Valor total: R$0 
-Lista de produtos: 
-  - Produto: Not found - Quantidade: 10
-Data da venda: 28/11/2023 19:58:10 - Tipo de pagamento: pix - Valor total: R$20 
-Lista de produtos: 
-  - Produto: Feijão - Quantidade: 1
-Data da venda: 28/11/2023 19:58:30 - Tipo de pagamento: DINHEIRO - Valor total: R$171 
-Lista de produtos: 
-  - Produto: Pao de queijo - Quantidade: 3
-  - Produto: Feijão - Quantidade: 6
-  - Produto: Not found - Quantidade: 10
-Data da venda: 28/11/2023 20:07:48 - Tipo de pagamento: PIX - Valor total: R$200 
-Lista de produtos: 
-  - Produto: Feijão - Quantidade: 10
-  - Produto: Not found - Quantidade: 3
-Data da venda: 28/11/2023 20:14:04 - Tipo de pagamento: PIX - Valor total: R$0 
-Lista de produtos: 
-  - Produto: Not found - Quantidade: 10
-Data da venda: 28/11/2023 20:17:56 - Tipo de pagamento: p - Valor total: R$0 
-Lista de produtos: 
-  - Produto: Not found - Quantidade: 10
-Data da venda: 28/11/2023 20:18:19 - Tipo de pagamento: pix - Valor total: R$0 
-Lista de produtos: 
-  - Produto: Not found - Quantidade: 1
-Data da venda: 28/11/2023 20:18:40 - Tipo de pagamento: p - Valor total: R$0 
-Lista de produtos: 
-  - Produto: Not found - Quantidade: 9
-Data da venda: 28/11/2023 20:20:59 - Tipo de pagamento: p - Valor total: R$0 
-Lista de produtos: 
-  - Produto: Not found - Quantidade: 1
-Data da venda: 28/11/2023 20:41:58 - Tipo de pagamento: pix - Valor total: R$0 
-Lista de produtos: 
-  - Produto: Not found - Quantidade: 1
-Data da venda: 28/11/2023 20:56:32 - Tipo de pagamento: pix - Valor total: R$0 
-Lista de produtos: 
-  - Produto: Not found - Quantidade: 10
-Data da venda: 28/11/2023 20:58:11 - Tipo de pagamento: pix - Valor total: R$0 
-Lista de produtos: 
-  - Produto: Not found - Quantidade: 1
-Data da venda: 28/11/2023 21:01:43 - Tipo de pagamento: pix - Valor total: R$0 
-Lista de produtos: 
-  - Produto: Not found - Quantidade: 10
-Data da venda: 28/11/2023 21:01:59 - Tipo de pagamento: pix - Valor total: R$0 
-Lista de produtos: 
-  - Produto: Not found - Quantidade: 10
-Data da venda: 28/11/2023 21:02:17 - Tipo de pagamento: pix - Valor total: R$17 
-Lista de produtos: 
-  - Produto: Pao de queijo - Quantidade: 1
-Data da venda: 28/11/2023 21:04:18 - Tipo de pagamento: pix - Valor total: R$0 
-Lista de produtos: 
-  - Produto: Not found - Quantidade: 1
-Data da venda: 28/11/2023 21:11:31 - Tipo de pagamento: pix - Valor total: R$0 
-Lista de produtos: 
-  - Produto: Not found - Quantidade: 1
-Data da venda: 28/11/2023 21:14:26 - Tipo de pagamento: pix - Valor total: R$10 
-Lista de produtos: 
-  - Produto: Arroz - Quantidade: 1
-Data da venda: 28/11/2023 21:14:44 - Tipo de pagamento: pix - Valor total: R$17 
-Lista de produtos: 
-  - Produto: Pao de queijo - Quantidade: 1
-Data da venda: 28/11/2023 21:15:45 - Tipo de pagamento: pix - Valor total: R$1174 
-Lista de produtos: 
-  - Produto: Arroz - Quantidade: 100
-  - Produto: Pao de queijo - Quantidade: 2
-  - Produto: Feijão - Quantidade: 7
+  - Produto: Café Arábico - Quantidade: 3
+  - Produto: Pão de queijo congelado - Quantidade: 5

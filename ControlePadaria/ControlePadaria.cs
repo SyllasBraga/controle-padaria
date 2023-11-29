@@ -20,8 +20,81 @@ class ControlePadaria
     static void Main(string[] args)
     {
         setup();
-        saveCashResgiter();
+        menu();
     }
+
+    static void menu()
+    {
+        Console.Clear();
+        Console.WriteLine("----- PADARIA PÃO NOSSO -----\n");
+        Console.WriteLine("Escolha uma opção: ");
+        Console.WriteLine("  1 - Produtos");
+        Console.WriteLine("  2 - Estoque");
+        Console.WriteLine("  3 - Fluxo de caixa");
+        Console.WriteLine("  0 - Fechar o programa");
+        int option = int.Parse(Console.ReadLine());
+        Console.Clear();
+        switch(option){
+            case 1:
+                Console.WriteLine("--- MENU PRODUTOS ---\n");
+                Console.WriteLine("Escolha uma opção: ");
+                Console.WriteLine("  1 - Cadastrar um novo produto");
+                Console.WriteLine("  2 - Ver produtos cadastrados");
+                int menuOption = int.Parse(Console.ReadLine());
+                if(menuOption == 1)
+                {
+                    Console.Clear();
+                    saveProducts();
+                    break;
+                }
+                else
+                {
+                    Console.Clear();
+                    showProducts();
+                    break;
+                }
+            case 2:
+                Console.WriteLine("--- MENU DE ESTOQUE ---\n");
+                Console.WriteLine("Escolha uma opção: ");
+                Console.WriteLine("  1 - Cadastrar um novo estoque de produto");
+                Console.WriteLine("  2 - Ver produtos cadastrados no estoque");
+                menuOption = int.Parse(Console.ReadLine());
+                if (menuOption == 1)
+                {
+                    Console.Clear();
+                    saveStock();
+                    break;
+                }
+                else
+                {
+                    Console.Clear();
+                    showStock();
+                    break;
+                }
+            case 3:
+                Console.WriteLine("--- MENU DE FLUXO DE CAIXA ---\n");
+                Console.WriteLine("Escolha uma opção: ");
+                Console.WriteLine("  1 - Cadastrar um novo fluxo de caixa");
+                Console.WriteLine("  2 - Ver flluxos castrados");
+                menuOption = int.Parse(Console.ReadLine());
+                if (menuOption == 1)
+                {
+                    Console.Clear();
+                    saveCashResgiter();
+                    break;
+                }
+                else
+                {
+                    Console.Clear();
+                    showCashRegister();
+                    break;
+                }
+            case 0:
+                Environment.Exit(0);
+                break;
+        }
+    }
+
     static void showProducts()
     {
         Product[] productsForShow = sortProductsByDescription(products);
@@ -46,6 +119,7 @@ class ControlePadaria
         }
         Console.WriteLine("\n Tecle 'enter' para continuar.\n");
         Console.ReadLine();
+        menu();
     }
     static void saveStock()
     {
@@ -66,6 +140,7 @@ class ControlePadaria
         }
 
         saveBinFile(productsStock, countStock, ref nameFileStock);
+        menu();
     }
 
     static void saveProducts()
@@ -95,6 +170,7 @@ class ControlePadaria
             Console.Clear();
         }
         saveBinFile(products, countProduct, ref nameFileProduct);
+        menu();
     }
 
     static void saveCashResgiter()
@@ -131,6 +207,7 @@ class ControlePadaria
             Console.WriteLine(cashRegister[i].ToString());
             saveTxtFile(nameFileCashRegister, cashRegister[i].ToString());
         }
+        menu();
     }
 
     static Product binarySearchProductById(Product[] productsSorted, int productId)
@@ -253,6 +330,24 @@ class ControlePadaria
         wr.Close();
     }
 
+    static void showCashRegister()
+    {
+        if (File.Exists($"{nameFileCashRegister}.txt"))
+        {
+            using (StreamReader rd2 = new StreamReader($"{nameFileCashRegister}.txt")) 
+            {
+                string linha = "";
+                while (!rd2.EndOfStream)
+                {
+                    linha += rd2.ReadLine() + "\n";
+                }
+                Console.WriteLine(linha);
+            }
+        }
+        Console.ReadKey();
+        menu();
+    }
+
     static void setup()
     {
         countProduct = readBinCount(nameFileProduct);
@@ -311,7 +406,7 @@ class ControlePadaria
             {
                 saleString+= sales[i].ToString();
             }
-            return $"Data da venda: {date} - Tipo de pagamento: {paymentType} - Valor total: R${totalValue} \nLista de produtos: {saleString}";
+            return $"\n Data da venda: {date} - Tipo de pagamento: {paymentType} - Valor total: R${totalValue} \nLista de produtos: {saleString}";
         }
     }
 }
