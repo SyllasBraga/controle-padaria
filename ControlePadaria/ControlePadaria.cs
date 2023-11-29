@@ -24,7 +24,7 @@ class ControlePadaria
     }
     static void showProducts()
     {
-        Product[] productsForShow = sortProducts();
+        Product[] productsForShow = sortProductsByDescription(products);
         Array.Clear(products, 0, products.Length);
         readBinProduct();
         Console.WriteLine("--- PRODUTOS CADASTRADOS NO SISTEMA ---\n");
@@ -49,7 +49,7 @@ class ControlePadaria
     }
     static void saveStock()
     {
-        Product[] sortedProducts = sortProducts();
+        Product[] sortedProducts = sortProductsByDescription(products);
         Console.WriteLine("--- CADASTRO DE ESTOQUE --- \n");
         showProducts();
         Console.Write("Digite o ID do produto que você deseja cadastrar estoque: ");
@@ -65,7 +65,7 @@ class ControlePadaria
             productsStock[oldCountStock].stockAmount = stock;
         }
 
-        saveBinFile(productsStock, countStock, nameFileStock);
+        saveBinFile(productsStock, countStock, ref nameFileStock);
     }
 
     static void saveProducts()
@@ -94,7 +94,7 @@ class ControlePadaria
             products[i].price = float.Parse(Console.ReadLine());
             Console.Clear();
         }
-        saveBinFile(products, countProduct, nameFileProduct);
+        saveBinFile(products, countProduct, ref nameFileProduct);
     }
 
     static void saveCashResgiter()
@@ -105,28 +105,30 @@ class ControlePadaria
         for(int i = oldCountCashRegister; i < countCashRegister; i++)
         {
             float totalValue = 0;
-            Product[] sortedProducts = sortProducts();
+            Product[] sortedProducts = sortProductsById(products);
             Console.Write("Digite o tipo de pagamento: ");
             cashRegister[i].paymentType = Console.ReadLine();
-            cashRegister[i].date = new DateTime();
+            cashRegister[i].date = DateTime.Now;
             Console.WriteLine("Digite o número de produtos que foram vendidos: ");
             int numberProducts = int.Parse(Console.ReadLine());
      
-            Sale[] sales = new Sale[numberProducts];
-            for (int j=0; j<sales.Length; i++)
+            Sale[] salesProduct = new Sale[numberProducts];
+            for (int j=0; j<salesProduct.Length; j++)
             {
                 Console.Clear();
-                Console.Write(sales.Length + "\n");
                 showProducts();
                 Console.Write("Digite o ID do produto que você deseja cadastrar estoque: ");
                 int productId = int.Parse(Console.ReadLine());
-                sales[j].product = binarySearchProductById(sortedProducts, productId);
+                salesProduct[j].product = binarySearchProductById(sortedProducts, productId);
                 Console.WriteLine("Digite a quantidade que a ser vendida: ");
-                sales[j].quantity = int.Parse(Console.ReadLine());
-                totalValue += sales[j].product.price * sales[j].quantity;
+                salesProduct[j].quantity = int.Parse(Console.ReadLine());
+                Console.WriteLine(salesProduct[j].product.ToString());
+                totalValue += salesProduct[j].product.price * salesProduct[j].quantity;
             }
             cashRegister[i].totalValue = totalValue;
-            cashRegister[i].sales = sales;
+            Console.WriteLine(cashRegister[i].totalValue);
+            cashRegister[i].sales = salesProduct;
+            Console.WriteLine(cashRegister[i].ToString());
             saveTxtFile(nameFileCashRegister, cashRegister[i].ToString());
         }
     }
@@ -143,7 +145,7 @@ class ControlePadaria
             {
                 return productsSorted[middle];
             }
-            else if (middle < productsSorted.Length)
+            else if (productsSorted[middle].id > productId)
             {
                 right = middle - 1;
             }
@@ -152,28 +154,40 @@ class ControlePadaria
                 left = middle + 1;
             }
         }
+        product.description = "Not found";
         return product;
     }
 
-    static Product[] sortProducts()
+    static Product[] sortProductsByDescription(Product[] productsSorted)
     {
         Product[] sortProdutcs = new Product[countProduct];
         for (int i = 0; i < countProduct; i++)
         {
-            sortProdutcs[i] = products[i];
+            sortProdutcs[i] = productsSorted[i];
         }
         Array.Sort(sortProdutcs, (p1, p2) => p1.description.CompareTo(p2.description));
         return sortProdutcs;
     }
 
-    static void saveCountBinFile(ref int total, string nameFile)
+    static Product[] sortProductsById(Product[] productsSorted)
+    {
+        Product[] sortProdutcs = new Product[countProduct];
+        for (int i = 0; i < countProduct; i++)
+        {
+            sortProdutcs[i] = productsSorted[i];
+        }
+        Array.Sort(sortProdutcs, (p1, p2) => p1.id.CompareTo(p2.id));
+        return sortProdutcs;
+    }
+
+    static void saveCountBinFile(ref int total, ref string nameFile)
     {
         IFormatter formatter = new BinaryFormatter();
         Stream wr = new FileStream($"count{nameFile}.bin", FileMode.Create, FileAccess.Write);
         formatter.Serialize(wr, total);
     }
 
-    static void saveBinFile<T>(T[] array, int total, string nameFile)
+    static void saveBinFile<T>(T[] array, int total, ref string nameFile)
     {
         IFormatter formatter = new BinaryFormatter();
         Stream wr = new FileStream($"array{nameFile}.bin", FileMode.Create, FileAccess.Write);
@@ -183,7 +197,7 @@ class ControlePadaria
             formatter.Serialize(wr, array[i]); 
         }
         wr.Close();
-        saveCountBinFile(ref i, nameFile);
+        saveCountBinFile(ref i, ref nameFile);
     }
     static void readBinProduct()
     {
@@ -248,12 +262,17 @@ class ControlePadaria
     }
 
     [Serializable]
-    struct Product{
+    struct Product : IComparable<Product>
+    {
         public string batch;
         public string description;
         public DateTime validity;
         public float price;
         public int id;
+        public int CompareTo(Product other)
+        {
+            return id.CompareTo(other.id);
+        }
         public override string ToString() =>
             $"ID: {id} - Lote: {batch} - Descrição: {description} - Validade: {validity} - Preço: R${price}";
     }
@@ -275,7 +294,7 @@ class ControlePadaria
         public Product product;
         public int quantity;
         public override string ToString() =>
-            $"  - Produto: {product.description} - Quantidade: {quantity}";
+            $"\n  - Produto: {product.description} - Quantidade: {quantity}";
     }
 
     [Serializable]
@@ -292,7 +311,7 @@ class ControlePadaria
             {
                 saleString+= sales[i].ToString();
             }
-            return $"Data da venda: {date} - Tipo de pagamento: {paymentType} - Valor total: {totalValue} - Vendas: {saleString}";
+            return $"Data da venda: {date} - Tipo de pagamento: {paymentType} - Valor total: R${totalValue} \nLista de produtos: {saleString}";
         }
     }
 }
